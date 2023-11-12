@@ -1,25 +1,46 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import TransactionTable from './TransactionTable';
+import TransactionForm from './TransactionForm';
+import './styles.css';
 
-function App() {
+const App = () => {
+  const [transactions, setTransactions] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    
+    fetch('./db.json')
+      .then(response => response.json())
+      .then(data => setTransactions(data.transactions))
+      .catch(error => console.error('Error fetching data:', error));
+  }, []);
+
+  const handleAddTransaction = newTransaction => {
+    
+    setTransactions([...transactions, newTransaction]);
+  };
+
+  const handleSearch = term => {
+    setSearchTerm(term);
+  };
+
+  
+  const filteredTransactions = transactions.filter(transaction =>
+    transaction.description.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1 style={{ textAlign: 'center' }}>Bank Transactions</h1>
+      <TransactionForm onAddTransaction={handleAddTransaction} />
+      <input
+        type="text"
+        placeholder="Search transactions..."
+        onChange={e => handleSearch(e.target.value)}
+      />
+      <TransactionTable transactions={filteredTransactions} />
     </div>
   );
-}
+};
 
 export default App;
