@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import TransactionTable from './TransactionTable';
-import TransactionForm from './TransactionForm';
+import TransactionTable from './components/TransactionTable';
+import TransactionForm from './components/TransactionForm';
 import './styles.css';
 
 const App = () => {
@@ -9,7 +9,9 @@ const App = () => {
 
   useEffect(() => {
     
-    fetch('./db.json')
+    fetch('https://my-json-server.typicode.com/BROGRAMMER025/BankOfFlatironCodeChallenge/db')
+    
+    
       .then(response => response.json())
       .then(data => setTransactions(data.transactions))
       .catch(error => console.error('Error fetching data:', error));
